@@ -57,4 +57,13 @@ public class Escalonador {
             processo.decrementWaitingTime();
         }
     }
+
+    public void forceReady() {
+        for (BCP processo : bloqueados) {
+            processo.setWaitingTime(0);
+            processo.setState("Pronto");
+            prontos.add(processo);
+            bloqueados.remove();
+        }
+    }
 }

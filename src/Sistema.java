@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -24,23 +25,34 @@ public class Sistema {
         Sistema.logFile = new Log(localArquivo);
         Sistema.logFile.writeloadProcess(Sistema.getEscalonador().getProntos());
 
-        while (!Sistema.getEscalonador().getProntos().isEmpty()) {
+        while (!getProcessTable().isEmpty()) {
             BCP processo = chooseProcess(Sistema.getEscalonador().getProntos().poll());
             if (processo != null) {
                 Sistema.cpu.loadProcess(processo, Sistema.getEscalonador(), Sistema.logFile);
 
-                for (BCP bcp : getProcessTable()) {
+                Iterator<BCP> iterator = getProcessTable().iterator();
+
+                while (iterator.hasNext()) {
+                    BCP bcp = iterator.next();
                     if (bcp.getState().equals("Bloqueado") && bcp.getWaitingTime() == 0) {
                         Sistema.escalonador.removeBloqueado(bcp);
                         Sistema.escalonador.addProntos(bcp);
                     }
+
+                    if (bcp.getState().equals("Finalizado"))
+                        iterator.remove();
                 }
+            } else if (!Sistema.getEscalonador().getBloqueados().isEmpty()) {
+                Sistema.escalonador.forceReady();
             }
         }
         Sistema.logFile.getWriter().close();
     }
 
     private static BCP chooseProcess(BCP processo) {
+        if (processo == null)
+            return null;
+
         processo.setState("Executando");
         return processo;
     }
