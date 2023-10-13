@@ -7,12 +7,12 @@ public class CPU {
 
         for (int i = 0; i < processo.getQuantum(); i++) {
 
-            String instrucaoAtual = processo.getProgramCounter();
-            if (instrucaoAtual.startsWith("X"))
-                processo.setX(Integer.parseInt(instrucaoAtual.substring(2)));
-            else if (instrucaoAtual.startsWith("Y"))
-                processo.setY(Integer.parseInt(instrucaoAtual.substring(2)));
-            else if (instrucaoAtual.equals("E/S")) {
+            String instruction = processo.getProgramCounter();
+            if (instruction.startsWith("X"))
+                processo.setX(Integer.parseInt(instruction.substring(2)));
+            else if (instruction.startsWith("Y"))
+                processo.setY(Integer.parseInt(instruction.substring(2)));
+            else if (instruction.equals("E/S")) {
                 //Logger.ES((i + 1), nomeProcesso);
                 logFile.writeInterruptionES(processo, i);
                 processo.incrementIndex();
@@ -20,7 +20,7 @@ public class CPU {
                 escalonador.decrementBloqueados();   //decrementa a os processos que estao na fila de bloqueados
                 escalonador.es(processo);            //poe o corno na fila de bloqueados
                 return;
-            } else if (instrucaoAtual.equals("SAIDA")) {
+            } else if (instruction.equals("SAIDA")) {
                 escalonador.saida(processo);
                 logFile.printFinish(processo, i);
                 return;

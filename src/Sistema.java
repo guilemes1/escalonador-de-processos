@@ -44,6 +44,7 @@ public class Sistema {
                 }
             } else if (!Sistema.getEscalonador().getBloqueados().isEmpty()) {
                 Sistema.escalonador.forceReady();
+                Sistema.escalonador.cleanBloqueados();
             }
         }
         Sistema.logFile.getWriter().close();

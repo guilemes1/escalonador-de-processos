@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
 public class Escalonador {
     private Queue<BCP> prontos;
@@ -63,7 +60,16 @@ public class Escalonador {
             processo.setWaitingTime(0);
             processo.setState("Pronto");
             prontos.add(processo);
-            bloqueados.remove();
+//            bloqueados.remove();
+        }
+    }
+
+    public void cleanBloqueados() {
+        Iterator<BCP> iterator = bloqueados.iterator();
+
+        while (iterator.hasNext()) {
+            BCP processo = iterator.next();
+            iterator.remove();
         }
     }
 }
