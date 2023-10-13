@@ -18,8 +18,6 @@ public class CPU {
                 escalonador.es(processo);            //poe o corno na fila de bloqueados
                 return;
             } else if (instrucaoAtual.equals("SAIDA")) {
-                processo.incrementIndex();
-                processo.setProgramCounter(processo.getInstructions()[processo.getIndex()]);
                 escalonador.saida(processo);
                 //Logger.finalizarProcesso(nomeProcesso, i);
                 return;

@@ -16,21 +16,29 @@ public class Sistema {
 
         File[] processosOrdenados = Reader.readProcess("processos");
         setProcessTable(Reader.createProcess(processosOrdenados));
-        Sistema.setEscalonador(new Escalonador(new LinkedList<>(Reader.createProcess(processosOrdenados))));
+        Sistema.setEscalonador(new Escalonador(new LinkedList<>(getProcessTable())));
         Sistema.setCpu(new CPU());
 
         System.out.println(Sistema.getEscalonador().getProntos());
 
         while (!Sistema.getEscalonador().getProntos().isEmpty()) {
-            BCP processo = Sistema.getEscalonador().getProntos().poll();  //criar um metodo escolhe proximo para alterar o estado
-            Sistema.cpu.loadProcess(processo, Sistema.getEscalonador());
+            //BCP processo = Sistema.getEscalonador().getProntos().poll();  //criar um metodo escolhe proximo para alterar o estado
+            BCP processo = chooseProcess(Sistema.getEscalonador().getProntos().poll());
+            if (processo != null) {
+                Sistema.cpu.loadProcess(processo, Sistema.getEscalonador());
 
-            for (BCP bloqueado : Sistema.escalonador.getBloqueados()) {
-                if (bloqueado.getWaitingTime() == 0) {
-                    Sistema.escalonador.removeBloqueado(bloqueado);
-                    Sistema.escalonador.addProntos(bloqueado);
+                for (BCP bcp : getProcessTable()) {
+                    if (bcp.getState().equals("Bloqueado") && bcp.getWaitingTime() == 0) {
+                        Sistema.escalonador.removeBloqueado(bcp);
+                        Sistema.escalonador.addProntos(bcp);
+                    }
                 }
-            }
+
+//                for (BCP bcp : getProcessTable()) {
+//                    if (bcp.getState().equals("Bloqueado") && bcp.getWaitingTime() == 0)
+//                        Sistema.escalonador.addProntos(bcp);
+//                }
+
 
 //            Iterator<BCP> iterator = Sistema.escalonador.getBloqueados().iterator();
 //            while (iterator.hasNext()) {
@@ -40,16 +48,21 @@ public class Sistema {
 //                    Sistema.escalonador.addProntos(bloqueado);
 //                }
 //            }
+            }
         }
+    }
 
+    private static BCP chooseProcess(BCP processo) {
+        processo.setState("Executando");
+        return processo;
     }
 
     public static List<BCP> getProcessTable() {
         return processTable;
     }
 
-    public static void setProcessTable(List<BCP> processTable) {
-        Sistema.processTable = processTable;
+    public static List<BCP> setProcessTable(List<BCP> processTable) {
+        return Sistema.processTable = processTable;
     }
 
     public static Escalonador getEscalonador() {
