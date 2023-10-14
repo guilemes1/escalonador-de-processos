@@ -1,6 +1,8 @@
 public class CPU {
     private int quantidadeTotalDeInstrucoes;
 
+    private int totalQuantum;
+
     public void loadProcess(BCP processo, Escalonador escalonador, Log logFile) {
 
         logFile.writeExecution(processo);
@@ -14,6 +16,7 @@ public class CPU {
                 processo.setY(Integer.parseInt(instruction.substring(2)));
             else if (instruction.equals("E/S")) {
                 incrementQuantidadeTotalDeInstrucoes();
+                totalQuantum += processo.getQuantum();
                 logFile.writeInterruptionES(processo, i);
                 processo.incrementIndex();
                 processo.setProgramCounter(processo.getInstructions()[processo.getIndex()]);
@@ -22,12 +25,14 @@ public class CPU {
                 return;
             } else if (instruction.equals("SAIDA")) {
                 incrementQuantidadeTotalDeInstrucoes();
+                totalQuantum += processo.getQuantum();
                 escalonador.saida(processo);
                 logFile.printFinish(processo, i);
                 return;
             }
 
             incrementQuantidadeTotalDeInstrucoes();
+            totalQuantum += processo.getQuantum();
             processo.incrementIndex();
             processo.setProgramCounter(processo.getInstructions()[processo.getIndex()]);
         }
@@ -43,5 +48,9 @@ public class CPU {
 
     public void incrementQuantidadeTotalDeInstrucoes() {
         this.quantidadeTotalDeInstrucoes++;
+    }
+
+    public int getTotalQuantum() {
+        return totalQuantum;
     }
 }

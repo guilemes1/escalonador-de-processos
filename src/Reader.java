@@ -15,7 +15,7 @@ public class Reader {
         return files;
     }
 
-    public static List<BCP> createProcess(File[] processosOrdenados) throws IOException {
+    public static List<BCP> createProcess(File[] processosOrdenados, int quantum) throws IOException {
         BufferedReader buffRead = null;
         FileReader arquivo = null;
         List<BCP> processTable = new ArrayList<>();
@@ -37,7 +37,7 @@ public class Reader {
             processo.setInstructions(instrucoes);
             processo.setProgramCounter(instrucoes[0]);
             processo.setState("Pronto");
-            processo.setQuantum(readQuantum("processos"));
+            processo.setQuantum(quantum);
 
             processTable.add(processo);  //Adiciona na tabela de processos
         }

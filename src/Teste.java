@@ -4,62 +4,53 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Sistema {
+public class Teste {
 
     private static List<BCP> processTable;
     private static Escalonador escalonador;
 
     private static CPU cpu;
-
     private static Log logFile;
 
-    public static void main(String[] args) throws IOException {
-
-        int quantum = Reader.readQuantum("processos");
+    public static void executaTeste(int quantum) throws IOException {
         File[] processosOrdenados = Reader.readProcess("processos");
         setProcessTable(Reader.createProcess(processosOrdenados, quantum));
-        Sistema.setEscalonador(new Escalonador(new LinkedList<>(getProcessTable())));
-        Sistema.setCpu(new CPU());
+        Teste.setEscalonador(new Escalonador(new LinkedList<>(getProcessTable())));
+        Teste.setCpu(new CPU());
         int quantidadeDeTrocas = 0;
         int quantidadeDeProcessos = getProcessTable().size();
 
-
-
-        String localArquivo = "log/log0" + Reader.readQuantum("processos") + ".txt";
-        Sistema.logFile = new Log(localArquivo);
-        Sistema.logFile.writeloadProcess(Sistema.getEscalonador().getProntos());
+        String localArquivo = "log/log0" + quantum + ".txt";
+        Teste.logFile = new Log(localArquivo);
+        Teste.logFile.writeloadProcess(Teste.getEscalonador().getProntos());
 
         while (!getProcessTable().isEmpty()) {
-            BCP processo = chooseProcess(Sistema.getEscalonador().getProntos().poll());
+            BCP processo = chooseProcess(Teste.getEscalonador().getProntos().poll());
             if (processo != null) {
-                Sistema.cpu.loadProcess(processo, Sistema.getEscalonador(), Sistema.logFile);
+                Teste.cpu.loadProcess(processo, Teste.getEscalonador(), Teste.logFile);
 
                 Iterator<BCP> iterator = getProcessTable().iterator();
 
                 while (iterator.hasNext()) {
                     BCP bcp = iterator.next();
                     if (bcp.getState().equals("Bloqueado") && bcp.getWaitingTime() == 0) {
-                        Sistema.escalonador.removeBloqueado(bcp);
-                        Sistema.escalonador.addProntos(bcp);
+                        Teste.escalonador.removeBloqueado(bcp);
+                        Teste.escalonador.addProntos(bcp);
                     }
 
                     if (bcp.getState().equals("Finalizado"))
                         iterator.remove();
                 }
-            } else if (!Sistema.getEscalonador().getBloqueados().isEmpty()) {
-                Sistema.escalonador.forceReady();
-                Sistema.escalonador.cleanBloqueados();
+            } else if (!Teste.getEscalonador().getBloqueados().isEmpty()) {
+                Teste.escalonador.forceReady();
+                Teste.escalonador.cleanBloqueados();
             }
 
             quantidadeDeTrocas++;
         }
-        int totalInstrucoes = Sistema.cpu.getQuantidadeTotalDeInstrucoes();
-        int totalQuantum = Sistema.cpu.getTotalQuantum();
-        Sistema.logFile.writeMeanAndQuantum(quantidadeDeTrocas, quantidadeDeProcessos, totalInstrucoes, totalQuantum, quantum);
-
-        for (int i = 5; i < 15; i++) {
-            Teste.executaTeste(i);
-        }
+        int totalInstrucoes = Teste.cpu.getQuantidadeTotalDeInstrucoes();
+        int totalQuantum = Teste.cpu.getTotalQuantum();
+        Teste.logFile.writeMeanAndQuantum(quantidadeDeTrocas, quantidadeDeProcessos, totalInstrucoes, totalQuantum, quantum);
     }
 
     private static BCP chooseProcess(BCP processo) {
@@ -75,7 +66,7 @@ public class Sistema {
     }
 
     public static List<BCP> setProcessTable(List<BCP> processTable) {
-        return Sistema.processTable = processTable;
+        return Teste.processTable = processTable;
     }
 
     public static Escalonador getEscalonador() {
@@ -83,7 +74,7 @@ public class Sistema {
     }
 
     public static void setEscalonador(Escalonador escalonador) {
-        Sistema.escalonador = escalonador;
+        Teste.escalonador = escalonador;
     }
 
     public static CPU getCpu() {
@@ -91,6 +82,6 @@ public class Sistema {
     }
 
     public static void setCpu(CPU cpu) {
-        Sistema.cpu = cpu;
+        Teste.cpu = cpu;
     }
 }
