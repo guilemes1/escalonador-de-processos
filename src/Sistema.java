@@ -20,6 +20,10 @@ public class Sistema {
         setProcessTable(Reader.createProcess(processosOrdenados));
         Sistema.setEscalonador(new Escalonador(new LinkedList<>(getProcessTable())));
         Sistema.setCpu(new CPU());
+        int quantidadeDeTrocas = 0;
+        int quantidadeDeProcessos = getProcessTable().size();
+        int quantum = Reader.readQuantum("processos");
+
 
         String localArquivo = "log/log0" + Reader.readQuantum("processos") + ".txt";
         Sistema.logFile = new Log(localArquivo);
@@ -46,8 +50,11 @@ public class Sistema {
                 Sistema.escalonador.forceReady();
                 Sistema.escalonador.cleanBloqueados();
             }
+
+            quantidadeDeTrocas++;
         }
-        Sistema.logFile.getWriter().close();
+        int totalInstrucoes = Sistema.cpu.getQuantidadeTotalDeInstrucoes();
+        Sistema.logFile.writeMeanAndQuantum(quantidadeDeTrocas, quantidadeDeProcessos, totalInstrucoes, quantum);
     }
 
     private static BCP chooseProcess(BCP processo) {

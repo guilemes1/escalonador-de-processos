@@ -1,5 +1,5 @@
 public class CPU {
-    private int programCounter;
+    private int quantidadeTotalDeInstrucoes;
 
     public void loadProcess(BCP processo, Escalonador escalonador, Log logFile) {
 
@@ -13,19 +13,21 @@ public class CPU {
             else if (instruction.startsWith("Y"))
                 processo.setY(Integer.parseInt(instruction.substring(2)));
             else if (instruction.equals("E/S")) {
-                //Logger.ES((i + 1), nomeProcesso);
+                incrementQuantidadeTotalDeInstrucoes();
                 logFile.writeInterruptionES(processo, i);
                 processo.incrementIndex();
                 processo.setProgramCounter(processo.getInstructions()[processo.getIndex()]);
-                escalonador.decrementBloqueados();   //decrementa a os processos que estao na fila de bloqueados
-                escalonador.es(processo);            //poe o corno na fila de bloqueados
+                escalonador.decrementBloqueados();
+                escalonador.es(processo);
                 return;
             } else if (instruction.equals("SAIDA")) {
+                incrementQuantidadeTotalDeInstrucoes();
                 escalonador.saida(processo);
                 logFile.printFinish(processo, i);
                 return;
             }
 
+            incrementQuantidadeTotalDeInstrucoes();
             processo.incrementIndex();
             processo.setProgramCounter(processo.getInstructions()[processo.getIndex()]);
         }
@@ -35,4 +37,11 @@ public class CPU {
         escalonador.addProntos(processo);
     }
 
+    public int getQuantidadeTotalDeInstrucoes() {
+        return quantidadeTotalDeInstrucoes;
+    }
+
+    public void incrementQuantidadeTotalDeInstrucoes() {
+        this.quantidadeTotalDeInstrucoes++;
+    }
 }

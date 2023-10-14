@@ -50,6 +50,16 @@ public class Log {
         writer.println(processo.getProgramName() + " terminado. X=" + processo.getX() + ". Y=" + processo.getY());
     }
 
+    public void writeMeanAndQuantum(int quantidadeDeTrocas, int quantidadeDeProcessos, int totalInstrucoes, int quantum) {
+        double meanTrocas = (double) (quantidadeDeTrocas-1) / quantidadeDeProcessos;
+        double meanInstructions = (double) totalInstrucoes;
+
+        writer.println("MEDIA DE TROCAS: " + (meanTrocas));
+        writer.println("MEDIA DE INSTRUCOES: " + meanInstructions);
+        writer.println("QUANTUM: " + quantum);
+        writer.close();
+    }
+
     //public teste
 
 
