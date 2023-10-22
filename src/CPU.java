@@ -38,6 +38,7 @@ public class CPU {
         }
 
         logFile.writeInterruption(processo, 2);
+//        incrementQuantidadeTotalDeInstrucoes();
         escalonador.decrementBloqueados();
         escalonador.addProntos(processo);
     }

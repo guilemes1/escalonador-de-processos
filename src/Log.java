@@ -51,8 +51,8 @@ public class Log {
     }
 
     public void writeMeanAndQuantum(int quantidadeDeTrocas, int quantidadeDeProcessos, int totalInstrucoes, int totalQuantum, int quantum) {
-        double meanTrocas = (double) (quantidadeDeTrocas-1) / quantidadeDeProcessos;
-        double meanInstructions = (double) totalInstrucoes / totalQuantum;
+        double meanTrocas = (double) (quantidadeDeTrocas) / quantidadeDeProcessos;
+        double meanInstructions = (double) totalInstrucoes / (quantidadeDeTrocas);
 
         writer.println("MEDIA DE TROCAS: " + (meanTrocas));
         writer.println("MEDIA DE INSTRUCOES: " + meanInstructions);

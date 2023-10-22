@@ -57,7 +57,7 @@ public class Sistema {
         int totalQuantum = Sistema.cpu.getTotalQuantum();
         Sistema.logFile.writeMeanAndQuantum(quantidadeDeTrocas, quantidadeDeProcessos, totalInstrucoes, totalQuantum, quantum);
 
-        for (int i = 5; i < 15; i++) {
+        for (int i = 4; i < 14; i++) {
             Teste.executaTeste(i);
         }
     }
